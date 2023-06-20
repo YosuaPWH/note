@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:note/constants/color_scheme.dart';
 
 class NoteCard extends StatelessWidget {
-  const NoteCard({super.key, required this.index});
+  const NoteCard({super.key, required this.index, required this.data});
 
   final int index;
+  final List<Map<String, dynamic>> data;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class NoteCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Title',
+            data[index]['title'],
             style: TextStyle(
                 fontSize: 16,
                 color: lightGreyColor,
@@ -26,9 +29,7 @@ class NoteCard extends StatelessWidget {
             height: 8,
           ),
           Text(
-            index % 2 == 0
-                ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non nunc ultricies amet viverra massa urna aenean dolor etiam. Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non nun .',
+            data[index]['desc'],
             maxLines: 7,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -40,7 +41,7 @@ class NoteCard extends StatelessWidget {
             height: 8,
           ),
           Text(
-            'May 31 2023',
+            data[index]['createdAt'],
             style: TextStyle(
               fontSize: 12,
               color: lightGreyColor,

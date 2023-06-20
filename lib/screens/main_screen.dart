@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:note/constants/color_scheme.dart';
 import 'package:note/constants/constants.dart';
+import 'package:note/screens/input_screen.dart';
 import 'package:note/screens/pages/notes_page.dart';
 import 'package:note/screens/pages/todos_page.dart';
+import 'package:note/services/db_helper.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -16,11 +20,20 @@ class _MainScreenState extends State<MainScreen> {
   late PageController _pageController;
 
   int _currentPage = 0;
+  List<Map<String, dynamic>> _allData = [];
+
+  void _refreshData() async {
+    final data = await SQLHelper.getData();
+    setState(() {
+      _allData = data;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    _refreshData();
   }
 
   @override
@@ -71,7 +84,9 @@ class _MainScreenState extends State<MainScreen> {
                   });
                 },
                 children: [
-                  NotesPage(),
+                  NotesPage(
+                    data: _allData,
+                  ),
                   TodosPage(),
                 ],
               ),
@@ -80,7 +95,14 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const InputScreen(),
+            ),
+          ).then((value) => {_refreshData()});
+        },
         child: Icon(Icons.add),
         backgroundColor: primaryColor,
       ),
